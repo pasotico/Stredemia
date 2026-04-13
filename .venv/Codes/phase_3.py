@@ -54,3 +54,16 @@ filtro = list(columnas_generales.values()) + list(columnas_sisco.values())
 nm = nm[filtro].copy()
 
 print(f"\nColumnas seleccionadas: {len(nm.columns)}")
+
+escala = {
+    'Nunca':        0,
+    'Casi Nunca':   1,
+    'Rara vez':     2,
+    'Algunas veces':3,
+    'Casi siempre': 4,
+    'Siempre':      5,
+}
+
+sisco = list(columnas_sisco.values())
+for columnas in sisco:
+    nm[columnas] = nm[columnas].map(escala)
