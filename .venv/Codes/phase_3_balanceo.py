@@ -16,6 +16,16 @@ for col in cols_texto:
 
 X = csv.drop(columns=['nivel_estres', 'puntaje_sisco'])
 y = csv['nivel_estres']
+print("\n*-*-*-* Distribución SIN SMOTE *-*-*-*-*-")
+etiquetas = {0: 'bajo', 1: 'medio', 2: 'alto'}
+distribucion = csv['nivel_estres'].value_counts().sort_index()
+porcentaje = (distribucion / len(csv) * 100).round(1)
+resumen = pd.DataFrame({
+    'etiqueta': [etiquetas[i] for i in distribucion.index],
+    'cantidad': distribucion.values,
+    'porcentaje (%)': porcentaje.values
+}, index=distribucion.index)
+print(resumen)
 
 X_train, X_temp, y_train, y_temp = seg(
     X, y,
@@ -30,3 +40,20 @@ X_val, X_test, y_val, y_test = seg(
     random_state=42,
     stratify=y_temp
 )
+
+min_clase = min(cont(y_train).values())
+k = min(3, min_clase - 1)
+
+sm = smote(random_state=42, k_neighbors=k)
+X_train_bal, y_train_bal = sm.fit_resample(X_train, y_train)
+
+print("\n*-*-*-*- Distribución con SMOTE *-*-*-*-*-")
+distribucion_bal = pd.Series(y_train_bal).value_counts().sort_index()
+porcentaje_bal = (distribucion_bal / len(y_train_bal) * 100).round(1)
+resumen_bal = pd.DataFrame({
+    'etiqueta': [etiquetas[i] for i in distribucion_bal.index],
+    'cantidad': distribucion_bal.values,
+    'porcentaje (%)': porcentaje_bal.values
+}, index=distribucion_bal.index)
+
+print(resumen_bal)

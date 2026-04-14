@@ -83,7 +83,6 @@ def clasificar(puntaje):
 nm['nivel_estres'] = nm['puntaje_sisco'].apply(clasificar)
 
 etiquetas = {0: 'bajo', 1: 'medio', 2: 'alto'}
-
 distribucion = nm['nivel_estres'].value_counts().sort_index()
 porcentaje = (distribucion / len(nm) * 100).round(1)
 resumen = pd.DataFrame({
