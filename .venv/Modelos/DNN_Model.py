@@ -3,6 +3,7 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler
+from tensorflow import keras
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -29,3 +30,25 @@ normalizar  = StandardScaler()
 X_train_sc  = normalizar.fit_transform(X_train)
 X_val_sc    = normalizar.transform(X_val)
 X_test_sc   = normalizar.transform(X_test)
+
+def construir_modelo(n_entradas):
+    modelo = keras.Sequential([
+        keras.layers.Input(shape=(n_entradas,)),
+
+        keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dropout(0.3),
+
+        keras.layers.Dense(64, activation='relu'),
+        keras.layers.Dropout(0.3),
+
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dropout(0.2),
+
+        keras.layers.Dense(3, activation='softmax')
+    ])
+    modelo.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    return modelo
