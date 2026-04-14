@@ -10,7 +10,7 @@ print(f"\nEstudiantes que reportaron estrés (SI): {len(nm)}")
 print(f"\nEstudiantes que no reportaron estrés (NO): {len(nmn)}")
 
 columnas_generales = {
-    'Semestre actual':                              'semestre',
+    'Semestre actual':                             'semestre',
     'Edad (en años)':                              'edad',
     'Estrato socioeconómico':                      'estrato',
     'Total de asignaturas (Cadi-cai) matriculados':'num_asignaturas',
@@ -76,12 +76,29 @@ nm['nivel_estres'] = pd.cut(
     bins=[-1, 24, 48, float('inf')],
     labels=['bajo', 'medio', 'alto']
 )
-
-print("\n=== Distribución de niveles de estrés ===")
+print("\n-*-*-* Distribución de clases (nivel de estrés) -*-*-*")
 print(nm['nivel_estres'].value_counts().sort_index())
+
+distribucion = nm['nivel_estres'].value_counts().sort_index()
+porcentaje = (distribucion / len(nm) * 100).round(1)
+
+resumen = pd.DataFrame({
+    'cantidad': distribucion,
+    'porcentaje (%)': porcentaje
+})
+print("\nClase mayoritaria:", distribucion.idxmax())
+print("Desbalance (% diferencia):", porcentaje.max() - porcentaje.min())
+
+print("\n*-*-* Balance de clases *-*-*")
+print(resumen)
 
 faltantes = nm.isna().sum()
 faltantes = faltantes[faltantes > 0]
 
-print("\n=== Valores faltantes por columna ===")
+print("\n*-*-*-* Valores faltantes por columna *-*-*-*-*")
 print("  Ninguno. Dataset limpio." if faltantes.empty else faltantes)
+
+
+nm.to_csv('../datos/Processed/producto_fase3.csv', index=False)
+print(f"\nProcesamiento de datos finalizado con éxito.")
+print("Archivo guardado en carpeta 'Processed'")
