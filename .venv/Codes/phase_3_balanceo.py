@@ -6,10 +6,14 @@ from sklearn.preprocessing import LabelEncoder
 
 csv = pd.read_csv("../datos/Processed/producto_fase3.csv")
 
-cols_texto = df.select_dtypes(include=['object', 'string']).columns.tolist()
+cols_texto = csv.select_dtypes(include=['object', 'string']).columns.tolist()
 cols_texto = [c for c in cols_texto if c != 'nivel_estres']
 encoders = {}
 for col in cols_texto:
     le = LabelEncoder()
     csv[col] = le.fit_transform(csv[col].astype(str))
     encoders[col] = le
+
+X = csv.drop(columns=['nivel_estres', 'puntaje_sisco'])
+y = csv['nivel_estres']
+
