@@ -57,3 +57,20 @@ resumen_bal = pd.DataFrame({
 }, index=distribucion_bal.index)
 
 print(resumen_bal)
+
+train_bal = pd.DataFrame(X_train_bal, columns=X.columns)
+train_bal['nivel_estres'] = y_train_bal.astype(int)
+train_bal.to_csv('../datos/Processed/train_balanceado.csv', index=False)
+
+val_df = X_val.copy()
+val_df['nivel_estres'] = y_val.values
+val_df.to_csv('../datos/Processed/validacion_original.csv', index=False)
+
+test_df = X_test.copy()
+test_df['nivel_estres'] = y_test.values
+test_df.to_csv('../datos/Processed/test_original.csv', index=False)
+
+print("\nArchivos guardados correctamente:")
+print(f"  Train balanceado: {len(train_bal)} filas")
+print(f"  Validación: {len(val_df)} filas")
+print(f"  Test: {len(test_df)} filas")
