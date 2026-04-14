@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
+from sklearn.preprocessing import StandardScaler
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -23,3 +24,8 @@ print(f"Entrenamiento: {X_train.shape}")
 print(f"Validación:    {X_val.shape}")
 print(f"Prueba:        {X_test.shape}")
 print(f"Features:      {X_train.shape[1]}")
+
+normalizar  = StandardScaler()
+X_train_sc  = normalizar.fit_transform(X_train)
+X_val_sc    = normalizar.transform(X_val)
+X_test_sc   = normalizar.transform(X_test)
