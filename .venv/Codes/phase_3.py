@@ -76,9 +76,6 @@ nm['nivel_estres'] = pd.cut(
     bins=[-1, 24, 48, float('inf')],
     labels=['bajo', 'medio', 'alto']
 )
-print("\n-*-*-* Distribución de clases (nivel de estrés) -*-*-*")
-print(nm['nivel_estres'].value_counts().sort_index())
-
 distribucion = nm['nivel_estres'].value_counts().sort_index()
 porcentaje = (distribucion / len(nm) * 100).round(1)
 
@@ -86,11 +83,11 @@ resumen = pd.DataFrame({
     'cantidad': distribucion,
     'porcentaje (%)': porcentaje
 })
-print("\nClase mayoritaria:", distribucion.idxmax())
-print("Desbalance (% diferencia):", porcentaje.max() - porcentaje.min())
-
 print("\n*-*-* Balance de clases *-*-*")
 print(resumen)
+
+print("\nClase mayoritaria:", distribucion.idxmax())
+print("Desbalance (% diferencia):", porcentaje.max() - porcentaje.min())
 
 faltantes = nm.isna().sum()
 faltantes = faltantes[faltantes > 0]
