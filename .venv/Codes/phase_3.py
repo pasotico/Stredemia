@@ -53,8 +53,6 @@ nm = nm.rename(columns=combinacion)
 filtro = list(columnas_generales.values()) + list(columnas_sisco.values())
 nm = nm[filtro].copy()
 
-print(f"\nColumnas seleccionadas: {len(nm.columns)}")
-
 escala = {
     'Nunca':        0,
     'Casi Nunca':   1,
@@ -67,3 +65,23 @@ escala = {
 sisco = list(columnas_sisco.values())
 for columnas in sisco:
     nm[columnas] = nm[columnas].map(escala)
+
+items_puntaje = [f's{i}' for i in range(1, 15)]
+
+nm['puntaje_sisco'] = nm[items_puntaje].sum(axis=1)
+
+# Clasificación vectorizada
+nm['nivel_estres'] = pd.cut(
+    nm['puntaje_sisco'],
+    bins=[-1, 24, 48, float('inf')],
+    labels=['bajo', 'medio', 'alto']
+)
+
+print("\n=== Distribución de niveles de estrés ===")
+print(nm['nivel_estres'].value_counts().sort_index())
+
+faltantes = nm.isna().sum()
+faltantes = faltantes[faltantes > 0]
+
+print("\n=== Valores faltantes por columna ===")
+print("  Ninguno. Dataset limpio." if faltantes.empty else faltantes)
