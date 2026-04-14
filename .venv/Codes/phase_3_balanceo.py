@@ -17,3 +17,6 @@ for col in cols_texto:
 X = csv.drop(columns=['nivel_estres', 'puntaje_sisco'])
 y = csv['nivel_estres']
 
+X_train, X_test, y_train, y_test = seg(
+    X, y, test_size=0.30, random_state=42, stratify=y
+)
