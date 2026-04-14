@@ -3,7 +3,6 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler
-from tensorflow import keras
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -24,7 +23,9 @@ y_test   = test['nivel_estres'].values
 print(f"Entrenamiento: {X_train.shape}")
 print(f"Validación:    {X_val.shape}")
 print(f"Prueba:        {X_test.shape}")
-print(f"Features:      {X_train.shape[1]}")
+print(f"Variables de entrada (features): {X_train.shape[1]}")
+print(f"  - Ítems SISCO:     21")
+print(f"  - Variables contextuales: 12")
 
 normalizar  = StandardScaler()
 X_train_sc  = normalizar.fit_transform(X_train)
