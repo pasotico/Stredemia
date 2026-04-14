@@ -71,20 +71,30 @@ items_puntaje = [f's{i}' for i in range(1, 15)]
 nm['puntaje_sisco'] = nm[items_puntaje].sum(axis=1)
 
 # Clasificación vectorizada
-nm['nivel_estres'] = pd.cut(
-    nm['puntaje_sisco'],
-    bins=[-1, 24, 48, float('inf')],
-    labels=['bajo', 'medio', 'alto']
-)
+
+def clasificar(puntaje):
+    if puntaje <= 24:
+        return 0
+    elif puntaje <= 48:
+        return 1
+    else:
+        return 2
+
+nm['nivel_estres'] = nm['puntaje_sisco'].apply(clasificar)
+
+etiquetas = {0: 'bajo', 1: 'medio', 2: 'alto'}
+
 distribucion = nm['nivel_estres'].value_counts().sort_index()
 porcentaje = (distribucion / len(nm) * 100).round(1)
-
 resumen = pd.DataFrame({
-    'cantidad': distribucion,
-    'porcentaje (%)': porcentaje
-})
+    'etiqueta': [etiquetas[i] for i in distribucion.index],
+    'cantidad': distribucion.values,
+    'porcentaje (%)': porcentaje.values
+}, index=distribucion.index)
+
 print("\n*-*-* Balance de clases *-*-*")
 print(resumen)
+
 
 print("\nClase mayoritaria:", distribucion.idxmax())
 print("Desbalance (% diferencia):", porcentaje.max() - porcentaje.min())
