@@ -3,9 +3,9 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.metrics import f1_score
 from tensorflow import keras
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import f1_score, classification_report
+from sklearn.metrics import f1_score, classification_report, roc_auc_score
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -117,6 +117,7 @@ historia_f = modelo_final.fit(
     callbacks=[detente_f],
     verbose=1
 )
+
 print("\n*-*-*-*- Evaluación final sobre datos de prueba *-*-*-*-")
 y_pred_final = np.argmax(modelo_final.predict(X_test_sc, verbose=0), axis=1)
 print("\nReporte de clasificación:")
@@ -124,3 +125,27 @@ print(classification_report(
     y_test, y_pred_final,
     target_names=['bajo', 'medio', 'alto']
 ))
+print("*-*-*-* MÉTRICAS Y EVALUACIONES *-*-*-*-*")
+print("\nAUC-ROC")
+
+y_probabilidad = modelo_final.predict(X_test_sc, verbose=0)
+
+clases = [0, 1, 2]
+nombres = ['bajo', 'medio', 'alto']
+
+y_test_bin = label_binarize(y_test, classes=clases)
+
+auc_macro = roc_auc_score(
+    y_test_bin, y_probabilidad,
+    multi_class='ovr',
+    average='macro'
+)
+
+print(f"\nAUC-ROC macro (one-vs-rest): {auc_macro:.4f}")
+
+for i, clase in enumerate(nombres):
+    if len(set(y_test_bin[:, i])) > 1:
+        auc_clase = roc_auc_score(y_test_bin[:, i], y_probabilidad[:, i])
+        print(f"  AUC-ROC {clase}: {auc_clase:.4f}")
+    else:
+        print(f"  AUC-ROC {clase}: No calculable")
