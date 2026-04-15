@@ -57,7 +57,7 @@ def construir_modelo(n_entradas):
 X_pliegue = np.vstack([X_train_sc, X_val_sc])
 y_pliegue = np.concatenate([y_train, y_val])
 
-n_entrada  = X_train.shape[1]
+n_entradas  = X_train.shape[1]
 k           = 5
 skf         = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
 
@@ -67,3 +67,5 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
 
     X_f_train, X_f_val = X_pliegue[idx_train], X_pliegue[idx_val]
     y_f_train, y_f_val = y_pliegue[idx_train], y_pliegue[idx_val]
+
+    modelo = construir_modelo(n_entradas)
