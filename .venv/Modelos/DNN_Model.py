@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from sklearn.metrics import f1_score
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler
 
@@ -61,6 +62,7 @@ n_entradas  = X_train.shape[1]
 k           = 5
 skf         = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
 
+f1_scores = []
 historias   = []
 print(f"\ninicio de validación cruzada con {k} folds (pliegues)...\n")
 for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
@@ -87,4 +89,6 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
     historias.append(historia)
 
     y_pred_fold = np.argmax(modelo.predict(X_f_val, verbose=0), axis=1)
-    
+    f1 = f1_score(y_f_val, y_pred_fold, average='macro')
+    f1_scores.append(f1)
+    print(f"F1-score en fold {fold}: {f1:.4f}")
