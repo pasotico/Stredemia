@@ -5,7 +5,10 @@ from sklearn.metrics import f1_score
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import f1_score, classification_report, roc_auc_score
+from sklearn.metrics import f1_score, classification_report, roc_auc_score, roc_curve
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -125,27 +128,44 @@ print(classification_report(
     y_test, y_pred_final,
     target_names=['bajo', 'medio', 'alto']
 ))
+print("Modelo entrenado con éxito...\n")
 print("*-*-*-* MÉTRICAS Y EVALUACIONES *-*-*-*-*")
 print("\nAUC-ROC")
-
 y_probabilidad = modelo_final.predict(X_test_sc, verbose=0)
 
 clases = [0, 1, 2]
 nombres = ['bajo', 'medio', 'alto']
 
 y_test_bin = label_binarize(y_test, classes=clases)
-
 auc_macro = roc_auc_score(
     y_test_bin, y_probabilidad,
     multi_class='ovr',
     average='macro'
 )
-
-print(f"\nAUC-ROC macro (one-vs-rest): {auc_macro:.4f}")
-
+print(f"Macro (one-vs-rest): {auc_macro:.4f}")
+print("\nPor clases:")
 for i, clase in enumerate(nombres):
     if len(set(y_test_bin[:, i])) > 1:
         auc_clase = roc_auc_score(y_test_bin[:, i], y_probabilidad[:, i])
         print(f"  AUC-ROC {clase}: {auc_clase:.4f}")
     else:
         print(f"  AUC-ROC {clase}: No calculable")
+
+
+colores = ['#1f77b4', '#ff7f0e', '#2ca02c']
+for i, (clase, color) in enumerate(zip(clases, colores)):
+    fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_probabilidad[:, i])
+    auc_i = roc_auc_score(y_test_bin[:, i], y_probabilidad[:, i])
+    plt.plot(fpr, tpr, color=color, linewidth=2,
+             label=f'{clase} (AUC = {auc_i:.2f})')
+
+plt.plot([0, 1], [0, 1], 'k--', linewidth=1, label='clasificador')
+plt.xlabel('Tasa de falsos positivos')
+plt.ylabel('Tasa de verdaderos positivos')
+plt.title('Curva ROC - STREDEMIA')
+plt.legend(loc='lower right')
+plt.tight_layout()
+plt.savefig('../Resultados/curva_roc.png')
+plt.show()
+print("Curvas ROC por clases archivadas en carpeta 'Resultados'")
+
