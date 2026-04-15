@@ -69,3 +69,11 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
     y_f_train, y_f_val = y_pliegue[idx_train], y_pliegue[idx_val]
 
     modelo = construir_modelo(n_entradas)
+
+    detente = keras.callbacks.EarlyStopping(
+        monitor='val_loss',
+        patience=15,
+        restore_best_weights=True
+    )
+
+    
