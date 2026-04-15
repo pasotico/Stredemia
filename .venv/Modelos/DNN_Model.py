@@ -5,7 +5,7 @@ from sklearn.metrics import f1_score
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import f1_score, classification_report, roc_auc_score, roc_curve
+from sklearn.metrics import f1_score, classification_report, roc_auc_score, roc_curve, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -169,3 +169,20 @@ plt.savefig('../Resultados/curva_roc.png')
 plt.show()
 print("Curvas ROC por clases archivadas en carpeta 'Resultados'")
 
+os.makedirs('../Resultados', exist_ok=True)
+cm = confusion_matrix(y_test, y_pred_final)
+# porcentaje de acierto
+cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+sns.heatmap(cm_norm, annot=True, fmt='.2f', cmap='Blues',
+            xticklabels=['bajo', 'medio', 'alto'],
+            yticklabels=['bajo', 'medio', 'alto'],
+            linewidths=0.5, linecolor='gray')
+plt.figure(figsize=(6,5))
+plt.title('matriz de confusión normalizada - STREDEMIA')
+plt.ylabel('real')
+plt.xlabel('predicho')
+plt.tight_layout()
+plt.savefig('../Resultados/matriz_confusion.png', dpi=300)
+plt.show()
+print("Matriz de confusión almacenada en carpeta 'Resultados'")
