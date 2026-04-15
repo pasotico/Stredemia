@@ -85,3 +85,6 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
             verbose=0
         )
     historias.append(historia)
+
+    y_pred_fold = np.argmax(modelo.predict(X_f_val, verbose=0), axis=1)
+    
