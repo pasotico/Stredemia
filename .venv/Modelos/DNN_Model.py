@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import joblib
+from sklearn.utils.class_weight import compute_class_weight
+
+clases = np.unique(y_pliegue)
+pesos = compute_class_weight('balanced', classes=clases, y=y_pliegue)
+
+class_weights = dict(zip(clases, pesos))
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -113,7 +119,7 @@ print("\n*-*-*-*- Entrenamiento de modelo final *-*-*-*-*-")
 modelo_final = construir_modelo(n_entradas)
 detente_f = keras.callbacks.EarlyStopping(
     monitor='val_loss',
-    patience=15,
+    patience=5,
     restore_best_weights=True
 )
 
@@ -123,6 +129,7 @@ historia_f = modelo_final.fit(
     batch_size=32,
     validation_data=(X_val_sc, y_val),
     callbacks=[detente_f],
+    class_weight=class_weights,
     verbose=1
 )
 
