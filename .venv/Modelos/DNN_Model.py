@@ -9,6 +9,7 @@ from sklearn.metrics import f1_score, classification_report, roc_auc_score, roc_
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import joblib
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -37,6 +38,10 @@ normalizar  = StandardScaler()
 X_train_sc  = normalizar.fit_transform(X_train)
 X_val_sc    = normalizar.transform(X_val)
 X_test_sc   = normalizar.transform(X_test)
+os.makedirs('../Modelos', exist_ok=True)
+joblib.dump(normalizar, '../Modelos/scaler.pkl')
+
+print("Scaler guardado en carpeta 'Modelos'")
 
 def construir_modelo(n_entradas):
     modelo = keras.Sequential([
@@ -116,7 +121,7 @@ historia_f = modelo_final.fit(
     X_pliegue, y_pliegue,
     epochs=150,
     batch_size=32,
-    validation_split=0.1,
+    validation_data=(X_val_sc, y_val),
     callbacks=[detente_f],
     verbose=1
 )
@@ -151,13 +156,13 @@ for i, clase in enumerate(nombres):
     else:
         print(f"  AUC-ROC {clase}: No calculable")
 
-
+plt.figure(figsize=(8,6))
 colores = ['#1f77b4', '#ff7f0e', '#2ca02c']
 for i, (clase, color) in enumerate(zip(clases, colores)):
     fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_probabilidad[:, i])
     auc_i = roc_auc_score(y_test_bin[:, i], y_probabilidad[:, i])
     plt.plot(fpr, tpr, color=color, linewidth=2,
-             label=f'{clase} (AUC = {auc_i:.2f})')
+            label=f'{nombres[i]} (AUC = {auc_i:.2f})')
 
 plt.plot([0, 1], [0, 1], 'k--', linewidth=1, label='clasificador')
 plt.xlabel('Tasa de falsos positivos')
@@ -205,3 +210,9 @@ plt.tight_layout()
 plt.savefig('../Resultados/curvas_entrenamiento.png')
 plt.show()
 print("Curvas de entrenamiento guardadas en carpeta 'Resultados'")
+
+os.makedirs('../Modelos', exist_ok=True)
+modelo_final.save('../Modelos/stredemia_modelo.keras')
+print("\nModelo ejecutado con éxito."
+      "\nMétricas y evaluaciones generadas con éxito"
+      "\nModelo Guardado (Carpeta Modelos)")
