@@ -60,3 +60,7 @@ y_pliegue = np.concatenate([y_train, y_val])
 n_entrada  = X_train.shape[1]
 k           = 5
 skf         = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
+
+print(f"\nIniciando validación cruzada con {k} folds (pliegues)...\n")
+for fold, (idx_train, idx_val) in enumerate(skf.split(X_kfold, y_kfold), 1):
+    print(f"*-*-*-* Fold {fold}/{k} ")
