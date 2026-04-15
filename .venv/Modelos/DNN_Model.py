@@ -5,7 +5,7 @@ from sklearn.metrics import f1_score
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, classification_report
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -114,3 +114,10 @@ historia_f = modelo_final.fit(
     callbacks=[detente_f],
     verbose=1
 )
+print("\n*-*-*-*- Evaluación final sobre datos de prueba *-*-*-*-")
+y_pred_final = np.argmax(modelo_final.predict(X_test_sc, verbose=0), axis=1)
+print("\nReporte de clasificación:")
+print(classification_report(
+    y_test, y_pred_final,
+    target_names=['bajo', 'medio', 'alto']
+))
