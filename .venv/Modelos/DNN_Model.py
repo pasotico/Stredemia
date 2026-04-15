@@ -45,6 +45,8 @@ joblib.dump(normalizar, '../Modelos/scaler.pkl')
 
 print("Scaler guardado en carpeta 'Modelos'")
 
+
+
 def construir_modelo(n_entradas):
     modelo = keras.Sequential([
         keras.layers.Input(shape=(n_entradas,)),
@@ -74,7 +76,10 @@ clases = np.unique(y_pliegue)
 pesos = compute_class_weight('balanced', classes=clases, y=y_pliegue)
 
 class_weights = dict(zip(clases, pesos))
+class_weights = {int(k): float(v) for k, v in class_weights.items()}
+
 os.makedirs('../Modelos', exist_ok=True)
+
 with open('../Modelos/class_weights.json', 'w') as f:
     json.dump(class_weights, f)
 
@@ -138,13 +143,20 @@ historia_f = modelo_final.fit(
 )
 
 print("\n*-*-*-*- Evaluación final sobre datos de prueba *-*-*-*-")
-y_pred_final = np.argmax(modelo_final.predict(X_test_sc, verbose=0), axis=1)
+y_proba = modelo_final.predict(X_test_sc, verbose=0)
+umbral_alto = 0.40
+y_pred_final = np.argmax(y_proba, axis=1)
+for i in range(len(y_pred_final)):
+    if y_proba[i][2] >= umbral_alto:
+        y_pred_final[i] = 2
+
 print("\nReporte de clasificación:")
 print(classification_report(
     y_test, y_pred_final,
     target_names=['bajo', 'medio', 'alto']
 ))
 print("Modelo entrenado con éxito...\n")
+
 print("*-*-*-* MÉTRICAS Y EVALUACIONES *-*-*-*-*")
 print("\nAUC-ROC")
 y_probabilidad = modelo_final.predict(X_test_sc, verbose=0)
