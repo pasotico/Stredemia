@@ -4,6 +4,8 @@ import tensorflow as tf
 from sklearn.metrics import f1_score
 from tensorflow import keras
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import f1_score
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -92,3 +94,4 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
     f1 = f1_score(y_f_val, y_pred_fold, average='macro')
     f1_scores.append(f1)
     print(f"F1-score en fold {fold}: {f1:.4f}")
+print(f"\nF1-score promedio k-folds: {np.mean(f1_scores):.4f} ± {np.std(f1_scores):.4f}")
