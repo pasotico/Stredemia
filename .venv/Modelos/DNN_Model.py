@@ -53,3 +53,6 @@ def construir_modelo(n_entradas):
         metrics=['accuracy']
     )
     return modelo
+
+X_pliegue = np.vstack([X_train_sc, X_val_sc])
+y_pliegue = np.concatenate([y_train, y_val])
