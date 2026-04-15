@@ -11,11 +11,7 @@ import seaborn as sns
 import os
 import joblib
 from sklearn.utils.class_weight import compute_class_weight
-
-clases = np.unique(y_pliegue)
-pesos = compute_class_weight('balanced', classes=clases, y=y_pliegue)
-
-class_weights = dict(zip(clases, pesos))
+import json
 
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -73,6 +69,14 @@ def construir_modelo(n_entradas):
 
 X_pliegue = np.vstack([X_train_sc, X_val_sc])
 y_pliegue = np.concatenate([y_train, y_val])
+
+clases = np.unique(y_pliegue)
+pesos = compute_class_weight('balanced', classes=clases, y=y_pliegue)
+
+class_weights = dict(zip(clases, pesos))
+os.makedirs('../Modelos', exist_ok=True)
+with open('../Modelos/class_weights.json', 'w') as f:
+    json.dump(class_weights, f)
 
 n_entradas  = X_train.shape[1]
 k           = 5
