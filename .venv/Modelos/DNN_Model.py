@@ -75,5 +75,12 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
         patience=15,
         restore_best_weights=True
     )
-
+    historia = modelo.fit(
+            X_f_train, y_f_train,
+            epochs=150,
+            batch_size=32,
+            validation_data=(X_f_val, y_f_val),
+            callbacks=[detente],
+            verbose=0       
+        )
     
