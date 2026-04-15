@@ -94,12 +94,15 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
     f1 = f1_score(y_f_val, y_pred_fold, average='macro')
     f1_scores.append(f1)
     print(f"F1-score en fold {fold}: {f1:.4f}")
-print(f"\nF1-score promedio k-folds: {np.mean(f1_scores):.4f} ± {np.std(f1_scores):.4f}")
+
+print("\n*-*-*-* Resumen validación cruzada *-*-*-*-*")
+for i, f1 in enumerate(f1_scores, 1):
+    print(f"  Fold {i}: F1-macro = {f1:.4f}")
+print(f"  Promedio: {np.mean(f1_scores):.4f}")
+print(f"  Desv. estándar: {np.std(f1_scores):.4f}")
 
 print("\n*-*-*-*- Entrenamiento de modelo final *-*-*-*-*-")
-
 modelo_final = construir_modelo(n_entradas)
-
 detente_f = keras.callbacks.EarlyStopping(
     monitor='val_loss',
     patience=15,
