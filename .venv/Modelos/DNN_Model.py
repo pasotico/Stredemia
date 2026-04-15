@@ -61,6 +61,7 @@ n_entradas  = X_train.shape[1]
 k           = 5
 skf         = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
 
+historias   = []
 print(f"\ninicio de validación cruzada con {k} folds (pliegues)...\n")
 for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
     print(f"*-*-*-* Fold {fold}/{k} ")
@@ -81,6 +82,6 @@ for fold, (idx_train, idx_val) in enumerate(skf.split(X_pliegue, y_pliegue), 1):
             batch_size=32,
             validation_data=(X_f_val, y_f_val),
             callbacks=[detente],
-            verbose=0       
+            verbose=0
         )
     
