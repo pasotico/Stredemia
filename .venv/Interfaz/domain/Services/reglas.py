@@ -12,9 +12,9 @@ def interpretar_resultado(clase_pred, probabilidades):
     etiquetas = {0: 'BAJO', 1: 'MEDIO', 2: 'ALTO'}
     colores   = {0: '🟢', 1: '🟡', 2: '🔴'}
     mensajes  = {
-        0: "Tu nivel de estrés es bajo. Mantén tus hábitos actuales.",
-        1: "Tu nivel de estrés es moderado. Considera apoyo.",
-        2: "Tu nivel de estrés es alto. Busca apoyo pronto."
+        0: "Tu nivel de estrés es bajo. ¡Sigue así! Mantén tus hábitos actuales.",
+        1: "Tu nivel de estrés es moderado. Considera apoyo de Bienestar Universitario.",
+        2: "Tu nivel de estrés es alto. ¡Busca apoyo de Bienestar Universitario pronto!."
     }
 
     return {
