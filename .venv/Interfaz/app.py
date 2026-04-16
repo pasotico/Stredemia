@@ -3,6 +3,7 @@ import numpy as np
 
 from Interfaz.infraestructure.modelo.cargar_modelo import cargar_modelo
 from Interfaz.application.casos_uso.clasificacion import clasificar_estres
+from Interfaz.Validaciones.validaciones import validar_formulario
 from Interfaz.desing.Mappings import *
 from Interfaz.desing.constantes import opciones_sisco
 
@@ -129,22 +130,22 @@ valores_default = {
 }
 
 
-if st.button("🔍 Clasificar mi nivel de estrés", use_container_width=True):
+if st.button("🔍 Clasificar mi nivel de estrés"):
 
-    errores = []
-
-    cambios = 0
-
-    if semestre != valores_default["semestre"]: cambios += 1
-    if estrato != valores_default["estrato"]: cambios += 1
-    if num_asignaturas != valores_default["num_asignaturas"]: cambios += 1
-    if promedio != valores_default["promedio"]: cambios += 1
-    if ha_perdido_cai != valores_default["ha_perdido_cai"]: cambios += 1
-    if horas_estudio != valores_default["horas_estudio"]: cambios += 1
-    if trabaja != valores_default["trabaja"]: cambios += 1
-    if resp_familiar != valores_default["resp_familiar"]: cambios += 1
-    if calidad_sueno != valores_default["calidad_sueno"]: cambios += 1
-    if consume_cafeina != valores_default["consume_cafeina"]: cambios += 1
+    valores_usuario = {
+        "semestre": semestre,
+        "edad": edad,
+        "estrato": estrato,
+        "num_asignaturas": num_asignaturas,
+        "promedio": promedio,
+        "ha_perdido_cai": ha_perdido_cai,
+        "horas_estudio": horas_estudio,
+        "trabaja": trabaja,
+        "resp_familiar": resp_familiar,
+        "horas_sueno": horas_sueno,
+        "calidad_sueno": calidad_sueno,
+        "consume_cafeina": consume_cafeina,
+    }
 
     respuestas_sisco = [
         s1,s2,s3,s4,s5,s6,s7,
@@ -152,12 +153,15 @@ if st.button("🔍 Clasificar mi nivel de estrés", use_container_width=True):
         s15,s16,s17,s18,s19,s20,s21
     ]
 
-    for r in respuestas_sisco:
-        if r != "Nunca":
-            cambios += 1
+    errores = validar_formulario(
+        valores_usuario,
+        valores_default,
+        respuestas_sisco
+    )
 
-    if cambios < 28:
-        st.error(f"⚠️ Debes responder todas las preguntas.")
+    if errores:
+        for e in errores:
+            st.error(e)
         st.stop()
 
 
