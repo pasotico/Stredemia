@@ -1,12 +1,8 @@
 import numpy as np
 
 def ajustar_prediccion(probabilidades):
-    clase_pred = int(np.argmax(probabilidades))
+    return int(np.argmax(probabilidades))
 
-    if probabilidades[2] >= 0.40:
-        clase_pred = 2
-
-    return clase_pred
 
 def interpretar_resultado(clase_pred, probabilidades):
     etiquetas = {0: 'BAJO', 1: 'MEDIO', 2: 'ALTO'}
