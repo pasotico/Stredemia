@@ -128,33 +128,15 @@ valores_default = {
     "calidad_sueno": 3,
     "consume_cafeina": "No",
 }
-
+respuestas_sisco = [
+    s1, s2, s3, s4, s5, s6, s7,
+    s8, s9, s10, s11, s12, s13, s14,
+    s15, s16, s17, s18, s19, s20, s21
+]
 
 if st.button("🔍 Clasificar mi nivel de estrés"):
 
-    valores_usuario = {
-        "semestre": semestre,
-        "edad": edad,
-        "estrato": estrato,
-        "num_asignaturas": num_asignaturas,
-        "promedio": promedio,
-        "ha_perdido_cai": ha_perdido_cai,
-        "horas_estudio": horas_estudio,
-        "trabaja": trabaja,
-        "resp_familiar": resp_familiar,
-        "horas_sueno": horas_sueno,
-        "calidad_sueno": calidad_sueno,
-        "consume_cafeina": consume_cafeina,
-    }
-
-    respuestas_sisco = [
-        s1,s2,s3,s4,s5,s6,s7,
-        s8,s9,s10,s11,s12,s13,s14,
-        s15,s16,s17,s18,s19,s20,s21
-    ]
-
     errores = validar_formulario(
-        valores_usuario,
         valores_default,
         respuestas_sisco
     )
@@ -163,7 +145,6 @@ if st.button("🔍 Clasificar mi nivel de estrés"):
         for e in errores:
             st.error(e)
         st.stop()
-
 
     entrada = np.array([[
         mapa_semestre[semestre],
