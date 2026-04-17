@@ -67,6 +67,12 @@ def construir_modelo(n_entradas):
         loss='sparse_categorical_crossentropy',
         metrics=['accuracy']
     )
+    tf.keras.utils.plot_model(
+        modelo,
+        to_file='../Resultados/arquitecturaDNN_Stredemia.png',
+        show_shapes=True,
+        show_layer_names=True
+    )
     return modelo
 
 X_pliegue = np.vstack([X_train_sc, X_val_sc])
